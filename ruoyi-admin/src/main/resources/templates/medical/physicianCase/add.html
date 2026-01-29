@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增医案-医家关系')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-physicianCase-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">医案ID：</label>
+            <div class="col-sm-8">
+                <input name="caseId" class="form-control" type="number" min="1" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">医家ID：</label>
+            <div class="col-sm-8">
+                <input name="physicianId" class="form-control" type="number" min="1" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">角色：</label>
+            <div class="col-sm-8">
+                <input name="role" class="form-control" type="text" required>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "medical/physicianCase";
+
+    $("#form-physicianCase-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-physicianCase-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

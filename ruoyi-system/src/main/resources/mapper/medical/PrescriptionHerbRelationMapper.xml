@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.PrescriptionHerbRelationMapper">
+    <resultMap id="PrescriptionHerbRelationResult" type="com.sdyfy.medical.domain.PrescriptionHerbRelation">
+        <id property="id" column="id" />
+        <result property="prescriptionId" column="prescription_id" />
+        <result property="herbId" column="herb_id" />
+        <result property="dosage" column="dosage" />
+        <result property="roleDesc" column="role_desc" />
+        <result property="remarks" column="remarks" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, prescription_id, herb_id, dosage, role_desc, remarks, created_at, updated_at
+    </sql>
+
+    <select id="selectPrescriptionHerbRelationById" resultMap="PrescriptionHerbRelationResult">
+        select <include refid="Base_Column_List" />
+        from prescription_herb_relation
+        where id = #{id}
+    </select>
+
+    <select id="selectRelationByPrescriptionAndHerb" resultMap="PrescriptionHerbRelationResult">
+        select <include refid="Base_Column_List" />
+        from prescription_herb_relation
+        where prescription_id = #{prescriptionId} and herb_id = #{herbId}
+        limit 1
+    </select>
+
+    <select id="selectPrescriptionHerbRelationList" parameterType="com.sdyfy.medical.domain.PrescriptionHerbRelation" resultMap="PrescriptionHerbRelationResult">
+        select <include refid="Base_Column_List" />
+        from prescription_herb_relation
+        <where>
+            <if test="prescriptionId != null">and prescription_id = #{prescriptionId}</if>
+            <if test="herbId != null">and herb_id = #{herbId}</if>
+            <if test="roleDesc != null and roleDesc != ''">and role_desc = #{roleDesc}</if>
+        </where>
+    </select>
+
+    <insert id="insertPrescriptionHerbRelation" parameterType="com.sdyfy.medical.domain.PrescriptionHerbRelation">
+        insert into prescription_herb_relation (
+            prescription_id, herb_id, dosage, role_desc, remarks, created_at, updated_at
+        ) values (
+            #{prescriptionId}, #{herbId}, #{dosage}, #{roleDesc}, #{remarks}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updatePrescriptionHerbRelation" parameterType="com.sdyfy.medical.domain.PrescriptionHerbRelation">
+        update prescription_herb_relation
+        <set>
+            <if test="prescriptionId != null">prescription_id = #{prescriptionId},</if>
+            <if test="herbId != null">herb_id = #{herbId},</if>
+            <if test="dosage != null">dosage = #{dosage},</if>
+            <if test="roleDesc != null">role_desc = #{roleDesc},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePrescriptionHerbRelationById">
+        delete from prescription_herb_relation where id = #{id}
+    </delete>
+
+    <delete id="deletePrescriptionHerbRelationByIds">
+        delete from prescription_herb_relation where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

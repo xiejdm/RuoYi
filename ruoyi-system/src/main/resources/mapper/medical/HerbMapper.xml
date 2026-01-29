@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.HerbMapper">
+    <resultMap id="HerbResult" type="com.sdyfy.medical.domain.Herb">
+        <id property="id" column="id" />
+        <result property="herbName" column="herb_name" />
+        <result property="latinName" column="latin_name" />
+        <result property="property" column="property" />
+        <result property="taste" column="taste" />
+        <result property="meridian" column="meridian" />
+        <result property="functionDesc" column="function_desc" />
+        <result property="usageNote" column="usage_note" />
+        <result property="processedPropertyMeridian" column="processed_property_meridian" />
+        <result property="processingMethod" column="processing_method" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, herb_name, latin_name, property, taste, meridian, function_desc, usage_note, processed_property_meridian,
+        processing_method, created_at, updated_at
+    </sql>
+
+    <select id="selectHerbById" resultMap="HerbResult">
+        select <include refid="Base_Column_List" />
+        from herbs
+        where id = #{id}
+    </select>
+
+    <select id="selectHerbByName" resultMap="HerbResult">
+        select <include refid="Base_Column_List" />
+        from herbs
+        where herb_name = #{herbName}
+        limit 1
+    </select>
+
+    <select id="selectHerbList" parameterType="com.sdyfy.medical.domain.Herb" resultMap="HerbResult">
+        select <include refid="Base_Column_List" />
+        from herbs
+        <where>
+            <if test="herbName != null and herbName != ''">and herb_name like concat('%', #{herbName}, '%')</if>
+            <if test="property != null and property != ''">and property = #{property}</if>
+            <if test="taste != null and taste != ''">and taste = #{taste}</if>
+            <if test="meridian != null and meridian != ''">and meridian like concat('%', #{meridian}, '%')</if>
+        </where>
+    </select>
+
+    <insert id="insertHerb" parameterType="com.sdyfy.medical.domain.Herb">
+        insert into herbs (
+            herb_name, latin_name, property, taste, meridian, function_desc, usage_note, processed_property_meridian,
+            processing_method, created_at, updated_at
+        ) values (
+            #{herbName}, #{latinName}, #{property}, #{taste}, #{meridian}, #{functionDesc}, #{usageNote},
+            #{processedPropertyMeridian}, #{processingMethod}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateHerb" parameterType="com.sdyfy.medical.domain.Herb">
+        update herbs
+        <set>
+            <if test="herbName != null">herb_name = #{herbName},</if>
+            <if test="latinName != null">latin_name = #{latinName},</if>
+            <if test="property != null">property = #{property},</if>
+            <if test="taste != null">taste = #{taste},</if>
+            <if test="meridian != null">meridian = #{meridian},</if>
+            <if test="functionDesc != null">function_desc = #{functionDesc},</if>
+            <if test="usageNote != null">usage_note = #{usageNote},</if>
+            <if test="processedPropertyMeridian != null">processed_property_meridian = #{processedPropertyMeridian},</if>
+            <if test="processingMethod != null">processing_method = #{processingMethod},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHerbById">
+        delete from herbs where id = #{id}
+    </delete>
+
+    <delete id="deleteHerbByIds">
+        delete from herbs where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.PhysicianCaseRelationMapper">
+    <resultMap id="PhysicianCaseRelationResult" type="com.sdyfy.medical.domain.PhysicianCaseRelation">
+        <id property="id" column="id" />
+        <result property="caseId" column="case_id" />
+        <result property="physicianId" column="physician_id" />
+        <result property="role" column="role" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, case_id, physician_id, role, created_at, updated_at
+    </sql>
+
+    <select id="selectPhysicianCaseRelationById" resultMap="PhysicianCaseRelationResult">
+        select <include refid="Base_Column_List" />
+        from physician_case_relation
+        where id = #{id}
+    </select>
+
+    <select id="selectRelationByCaseAndPhysician" resultMap="PhysicianCaseRelationResult">
+        select <include refid="Base_Column_List" />
+        from physician_case_relation
+        where case_id = #{caseId} and physician_id = #{physicianId}
+        limit 1
+    </select>
+
+    <select id="selectPhysicianCaseRelationList" parameterType="com.sdyfy.medical.domain.PhysicianCaseRelation" resultMap="PhysicianCaseRelationResult">
+        select <include refid="Base_Column_List" />
+        from physician_case_relation
+        <where>
+            <if test="caseId != null">and case_id = #{caseId}</if>
+            <if test="physicianId != null">and physician_id = #{physicianId}</if>
+            <if test="role != null and role != ''">and role = #{role}</if>
+        </where>
+    </select>
+
+    <insert id="insertPhysicianCaseRelation" parameterType="com.sdyfy.medical.domain.PhysicianCaseRelation">
+        insert into physician_case_relation (
+            case_id, physician_id, role, created_at, updated_at
+        ) values (
+            #{caseId}, #{physicianId}, #{role}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updatePhysicianCaseRelation" parameterType="com.sdyfy.medical.domain.PhysicianCaseRelation">
+        update physician_case_relation
+        <set>
+            <if test="caseId != null">case_id = #{caseId},</if>
+            <if test="physicianId != null">physician_id = #{physicianId},</if>
+            <if test="role != null">role = #{role},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhysicianCaseRelationById">
+        delete from physician_case_relation where id = #{id}
+    </delete>
+
+    <delete id="deletePhysicianCaseRelationByIds">
+        delete from physician_case_relation where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

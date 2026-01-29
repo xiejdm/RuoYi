@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.CaseRecordMapper">
+    <resultMap id="CaseRecordResult" type="com.sdyfy.medical.domain.CaseRecord">
+        <id property="id" column="id" />
+        <result property="caseCode" column="case_code" />
+        <result property="patientName" column="patient_name" />
+        <result property="gender" column="gender" />
+        <result property="age" column="age" />
+        <result property="diseaseName" column="disease_name" />
+        <result property="tcmDiagnosis" column="tcm_diagnosis" />
+        <result property="syndrome" column="syndrome" />
+        <result property="chiefComplaint" column="chief_complaint" />
+        <result property="presentIllness" column="present_illness" />
+        <result property="tongue" column="tongue" />
+        <result property="pulse" column="pulse" />
+        <result property="treatmentPrinciple" column="treatment_principle" />
+        <result property="outcome" column="outcome" />
+        <result property="source" column="source" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, case_code, patient_name, gender, age, disease_name, tcm_diagnosis, syndrome, chief_complaint,
+        present_illness, tongue, pulse, treatment_principle, outcome, source, created_at, updated_at
+    </sql>
+
+    <select id="selectCaseRecordById" resultMap="CaseRecordResult">
+        select <include refid="Base_Column_List" />
+        from case_records
+        where id = #{id}
+    </select>
+
+    <select id="selectCaseRecordByCaseCode" resultMap="CaseRecordResult">
+        select <include refid="Base_Column_List" />
+        from case_records
+        where case_code = #{caseCode}
+        limit 1
+    </select>
+
+    <select id="selectCaseRecordList" parameterType="com.sdyfy.medical.domain.CaseRecord" resultMap="CaseRecordResult">
+        select <include refid="Base_Column_List" />
+        from case_records
+        <where>
+            <if test="caseCode != null and caseCode != ''">and case_code = #{caseCode}</if>
+            <if test="patientName != null and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="gender != null and gender != ''">and gender = #{gender}</if>
+            <if test="diseaseName != null and diseaseName != ''">and disease_name like concat('%', #{diseaseName}, '%')</if>
+            <if test="tcmDiagnosis != null and tcmDiagnosis != ''">and tcm_diagnosis like concat('%', #{tcmDiagnosis}, '%')</if>
+        </where>
+    </select>
+
+    <insert id="insertCaseRecord" parameterType="com.sdyfy.medical.domain.CaseRecord">
+        insert into case_records (
+            case_code, patient_name, gender, age, disease_name, tcm_diagnosis, syndrome, chief_complaint,
+            present_illness, tongue, pulse, treatment_principle, outcome, source, created_at, updated_at
+        ) values (
+            #{caseCode}, #{patientName}, #{gender}, #{age}, #{diseaseName}, #{tcmDiagnosis}, #{syndrome}, #{chiefComplaint},
+            #{presentIllness}, #{tongue}, #{pulse}, #{treatmentPrinciple}, #{outcome}, #{source}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateCaseRecord" parameterType="com.sdyfy.medical.domain.CaseRecord">
+        update case_records
+        <set>
+            <if test="caseCode != null">case_code = #{caseCode},</if>
+            <if test="patientName != null">patient_name = #{patientName},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="diseaseName != null">disease_name = #{diseaseName},</if>
+            <if test="tcmDiagnosis != null">tcm_diagnosis = #{tcmDiagnosis},</if>
+            <if test="syndrome != null">syndrome = #{syndrome},</if>
+            <if test="chiefComplaint != null">chief_complaint = #{chiefComplaint},</if>
+            <if test="presentIllness != null">present_illness = #{presentIllness},</if>
+            <if test="tongue != null">tongue = #{tongue},</if>
+            <if test="pulse != null">pulse = #{pulse},</if>
+            <if test="treatmentPrinciple != null">treatment_principle = #{treatmentPrinciple},</if>
+            <if test="outcome != null">outcome = #{outcome},</if>
+            <if test="source != null">source = #{source},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCaseRecordById">
+        delete from case_records where id = #{id}
+    </delete>
+
+    <delete id="deleteCaseRecordByIds">
+        delete from case_records where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
