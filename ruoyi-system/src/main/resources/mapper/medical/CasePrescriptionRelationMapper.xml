@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.CasePrescriptionRelationMapper">
+    <resultMap id="CasePrescriptionRelationResult" type="com.sdyfy.medical.domain.CasePrescriptionRelation">
+        <id property="id" column="id" />
+        <result property="caseId" column="case_id" />
+        <result property="prescriptionId" column="prescription_id" />
+        <result property="usageMethod" column="usage_method" />
+        <result property="dosageAdjustment" column="dosage_adjustment" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, case_id, prescription_id, usage_method, dosage_adjustment, created_at, updated_at
+    </sql>
+
+    <select id="selectCasePrescriptionRelationById" resultMap="CasePrescriptionRelationResult">
+        select <include refid="Base_Column_List" />
+        from case_prescription_relation
+        where id = #{id}
+    </select>
+
+    <select id="selectRelationByCaseAndPrescription" resultMap="CasePrescriptionRelationResult">
+        select <include refid="Base_Column_List" />
+        from case_prescription_relation
+        where case_id = #{caseId} and prescription_id = #{prescriptionId}
+        limit 1
+    </select>
+
+    <select id="selectCasePrescriptionRelationList" parameterType="com.sdyfy.medical.domain.CasePrescriptionRelation" resultMap="CasePrescriptionRelationResult">
+        select <include refid="Base_Column_List" />
+        from case_prescription_relation
+        <where>
+            <if test="caseId != null">and case_id = #{caseId}</if>
+            <if test="prescriptionId != null">and prescription_id = #{prescriptionId}</if>
+        </where>
+    </select>
+
+    <insert id="insertCasePrescriptionRelation" parameterType="com.sdyfy.medical.domain.CasePrescriptionRelation">
+        insert into case_prescription_relation (
+            case_id, prescription_id, usage_method, dosage_adjustment, created_at, updated_at
+        ) values (
+            #{caseId}, #{prescriptionId}, #{usageMethod}, #{dosageAdjustment}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateCasePrescriptionRelation" parameterType="com.sdyfy.medical.domain.CasePrescriptionRelation">
+        update case_prescription_relation
+        <set>
+            <if test="caseId != null">case_id = #{caseId},</if>
+            <if test="prescriptionId != null">prescription_id = #{prescriptionId},</if>
+            <if test="usageMethod != null">usage_method = #{usageMethod},</if>
+            <if test="dosageAdjustment != null">dosage_adjustment = #{dosageAdjustment},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCasePrescriptionRelationById">
+        delete from case_prescription_relation where id = #{id}
+    </delete>
+
+    <delete id="deleteCasePrescriptionRelationByIds">
+        delete from case_prescription_relation where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

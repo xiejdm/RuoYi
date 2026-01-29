@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdyfy.medical.mapper.PhysicianMapper">
+    <resultMap id="PhysicianResult" type="com.sdyfy.medical.domain.Physician">
+        <id property="id" column="id" />
+        <result property="physicianName" column="physician_name" />
+        <result property="generation" column="generation" />
+        <result property="teacher" column="teacher" />
+        <result property="academicThought" column="academic_thought" />
+        <result property="specialty" column="specialty" />
+        <result property="representativeWorks" column="representative_works" />
+        <result property="createTime" column="created_at" />
+        <result property="updateTime" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, physician_name, generation, teacher, academic_thought, specialty, representative_works, created_at, updated_at
+    </sql>
+
+    <select id="selectPhysicianById" resultMap="PhysicianResult">
+        select <include refid="Base_Column_List" />
+        from physicians
+        where id = #{id}
+    </select>
+
+    <select id="selectPhysicianByName" resultMap="PhysicianResult">
+        select <include refid="Base_Column_List" />
+        from physicians
+        where physician_name = #{physicianName}
+        limit 1
+    </select>
+
+    <select id="selectPhysicianList" parameterType="com.sdyfy.medical.domain.Physician" resultMap="PhysicianResult">
+        select <include refid="Base_Column_List" />
+        from physicians
+        <where>
+            <if test="physicianName != null and physicianName != ''">and physician_name like concat('%', #{physicianName}, '%')</if>
+            <if test="generation != null">and generation = #{generation}</if>
+        </where>
+    </select>
+
+    <insert id="insertPhysician" parameterType="com.sdyfy.medical.domain.Physician">
+        insert into physicians (
+            physician_name, generation, teacher, academic_thought, specialty, representative_works, created_at, updated_at
+        ) values (
+            #{physicianName}, #{generation}, #{teacher}, #{academicThought}, #{specialty}, #{representativeWorks},
+            #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updatePhysician" parameterType="com.sdyfy.medical.domain.Physician">
+        update physicians
+        <set>
+            <if test="physicianName != null">physician_name = #{physicianName},</if>
+            <if test="generation != null">generation = #{generation},</if>
+            <if test="teacher != null">teacher = #{teacher},</if>
+            <if test="academicThought != null">academic_thought = #{academicThought},</if>
+            <if test="specialty != null">specialty = #{specialty},</if>
+            <if test="representativeWorks != null">representative_works = #{representativeWorks},</if>
+            updated_at = #{updateTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhysicianById">
+        delete from physicians where id = #{id}
+    </delete>
+
+    <delete id="deletePhysicianByIds">
+        delete from physicians where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

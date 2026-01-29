@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增医案')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-caseRecord-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">医案编号：</label>
+            <div class="col-sm-8">
+                <input name="caseCode" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">患者姓名：</label>
+            <div class="col-sm-8">
+                <input name="patientName" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">性别：</label>
+            <div class="col-sm-8">
+                <select name="gender" class="form-control" th:with="type=${@dict.getType('sys_user_sex')}">
+                    <option value="">请选择</option>
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">年龄：</label>
+            <div class="col-sm-8">
+                <input name="age" class="form-control" type="number" min="0" max="150" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">疾病名称：</label>
+            <div class="col-sm-8">
+                <input name="diseaseName" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">中医病名/证名：</label>
+            <div class="col-sm-8">
+                <input name="tcmDiagnosis" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">证候：</label>
+            <div class="col-sm-8">
+                <input name="syndrome" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">主诉：</label>
+            <div class="col-sm-8">
+                <textarea name="chiefComplaint" class="form-control" rows="3" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">现病史：</label>
+            <div class="col-sm-8">
+                <textarea name="presentIllness" class="form-control" rows="3" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">舌象：</label>
+            <div class="col-sm-8">
+                <input name="tongue" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">脉象：</label>
+            <div class="col-sm-8">
+                <input name="pulse" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">治法：</label>
+            <div class="col-sm-8">
+                <input name="treatmentPrinciple" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">疗效转归：</label>
+            <div class="col-sm-8">
+                <textarea name="outcome" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">来源：</label>
+            <div class="col-sm-8">
+                <textarea name="source" class="form-control" rows="2"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "medical/caseRecord";
+
+    $("#form-caseRecord-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-caseRecord-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

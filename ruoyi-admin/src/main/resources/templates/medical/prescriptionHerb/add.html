@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增方剂-中药关系')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-prescriptionHerb-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">方剂ID：</label>
+            <div class="col-sm-8">
+                <input name="prescriptionId" class="form-control" type="number" min="1" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">中药ID：</label>
+            <div class="col-sm-8">
+                <input name="herbId" class="form-control" type="number" min="1" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">剂量：</label>
+            <div class="col-sm-8">
+                <input name="dosage" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">配伍角色：</label>
+            <div class="col-sm-8">
+                <input name="roleDesc" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea name="remarks" class="form-control" rows="2"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "medical/prescriptionHerb";
+
+    $("#form-prescriptionHerb-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-prescriptionHerb-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>
